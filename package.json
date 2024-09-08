@@ -1,0 +1,19 @@
+{
+  "name": "nano-binary-node",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node socket.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@socket.io/component-emitter": "^3.1.2",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "socket.io-client": "^2.5.0"
+  }
+}
