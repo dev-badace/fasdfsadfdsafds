@@ -1,6 +1,6 @@
 import { Manager } from "socket.io-client";
 import { Emitter } from "@socket.io/component-emitter"; // polyfill of Node.js EventEmitter in the browser
-import { minimal, Decimal } from "./vendor.js";
+import { minimal } from "./vendor.js";
 
 const ss = new TextEncoder("utf-8");
 const rs = new TextDecoder("utf-8");
@@ -147,11 +147,11 @@ function decodeBind(e, t = "utf8") {
   return (i) => e(decode(t)(i));
 }
 
-const rn = minimal.util; //
+const rn = { emptyArray: [], Long: null };
 const nn = minimal.Reader;
 const an = minimal.Writer;
-
-const on = minimal.roots.gameCrash || (minimal.roots.gameCrash = {});
+console.log(minimal.Reader);
+const on = {};
 on.CrashInfo = (() => {
   function t(t) {
     if (((this.players = []), (this.xBets = []), t))
@@ -642,9 +642,12 @@ function onProgress({ elapsed: t }) {
     console.log("game_progress ", rate.toFixed(2));
 }
 
+function maxRateToPayout(maxRate) {
+  return parseFloat((maxRate / 100).toFixed(2));
+}
 function onEnd(t) {
   (status = 3),
-    (rate = new Decimal(t.maxRate).div(100).toNumber()),
+    (rate = maxRateToPayout(t.maxRate)),
     (elapsed = Ln(rate)),
     (hash = t.hash);
 

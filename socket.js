@@ -1,5 +1,4 @@
 import { manager, on, decodeBind } from "./setup.js";
-import { Decimal } from "./vendor.js";
 import cors from "cors";
 import express from "express";
 
@@ -73,6 +72,10 @@ function sendSSEToAll(data) {
   });
 }
 
+function maxRateToPayout(maxRate) {
+  return parseFloat((maxRate / 100).toFixed(2));
+}
+
 const game = manager.socket("/g/c");
 
 game.on("connect", () => {
@@ -102,7 +105,7 @@ game.on(
 game.on(
   "ed",
   decodeBind((t) => {
-    const rate = new Decimal(t.maxRate).div(100).toNumber();
+    const rate = maxRateToPayout(t.maxRate);
     const hash = t.hash;
 
     console.log(`game_crash `, {
@@ -111,7 +114,7 @@ game.on(
     });
 
     //send last game_tick with final payout rate
-    sendSSEToAll({ type: "game_tick", payout: rate.toFixed(2) });
+    sendSSEToAll({ type: "game_tick", payout: rate });
     // send game crash message
     sendSSEToAll({ type: "game_crash" });
   }, on.End)
@@ -137,7 +140,7 @@ game.on(
 game.on(
   "st",
   decodeBind((t) => {
-    const bust = new Decimal(t.maxRate).div(100).toNumber();
+    const bust = maxRateToPayout(t.maxRate);
     const hash = t.hash;
     const gameId = t.gameId;
 
