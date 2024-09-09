@@ -10,32 +10,7 @@ var commonjsGlobal =
     : {};
 
 var indexMinimal = {},
-  minimal$1 = {},
-  aspromise = asPromise;
-function asPromise(e, t) {
-  for (
-    var n = new Array(arguments.length - 1), r = 0, i = 2, o = !0;
-    i < arguments.length;
-
-  )
-    n[r++] = arguments[i++];
-  return new Promise(function (i, a) {
-    n[r] = function (e) {
-      if (o)
-        if (((o = !1), e)) a(e);
-        else {
-          for (var t = new Array(arguments.length - 1), n = 0; n < t.length; )
-            t[n++] = arguments[n];
-          i.apply(null, t);
-        }
-    };
-    try {
-      e.apply(t || null, n);
-    } catch (s) {
-      o && ((o = !1), a(s));
-    }
-  });
-}
+  minimal$1 = {};
 var base64$2 = {};
 !(function (e) {
   var t = base64$2;
@@ -499,9 +474,7 @@ var charCodeAt = String.prototype.charCodeAt;
         t
       );
     }
-    (t.asPromise = aspromise),
-      (t.base64 = base64$2),
-      (t.float = float),
+    (t.float = float),
       (t.inquire = inquire_1),
       (t.utf8 = utf8$4),
       (t.pool = pool_1),
@@ -518,8 +491,6 @@ var charCodeAt = String.prototype.charCodeAt;
         ("undefined" != typeof window && window) ||
         ("undefined" != typeof self && self) ||
         commonjsGlobal),
-      (t.emptyArray = Object.freeze ? Object.freeze([]) : []),
-      (t.emptyObject = Object.freeze ? Object.freeze({}) : {}),
       (t.isInteger =
         Number.isInteger ||
         function (e) {
@@ -1102,8 +1073,7 @@ function BufferReader(e) {
         );
   }),
   BufferReader._configure();
-var rpc = {};
-var roots = {};
+
 !(function (e) {
   var t = indexMinimal;
   function n() {
@@ -1117,8 +1087,6 @@ var roots = {};
     (t.Reader = reader),
     (t.BufferReader = reader_buffer),
     (t.util = minimal$1),
-    (t.rpc = rpc),
-    (t.roots = roots),
     (t.configure = n),
     n();
 })();
