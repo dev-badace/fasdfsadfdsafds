@@ -1,4 +1,4 @@
-import { manager, on, decodeBind } from "./setup.js";
+import { getManager, on, decodeBind } from "./setup.js";
 import cors from "cors";
 import express from "express";
 
@@ -10,7 +10,7 @@ const allowedOrigins = [
   "http://127.0.0.1:50001", // For local Flask server
 ];
 
-const PORT = 50002; // Choose any available port
+const PORT = 3000; // Choose any available port
 
 app.use(
   cors({
@@ -28,6 +28,11 @@ app.use(
     credentials: true,
   })
 );
+
+// app.get("*", (req) => {
+//   console.log(req.headers);
+//   console.log("here");
+// });
 
 // SSE route
 app.get(
@@ -76,6 +81,7 @@ function maxRateToPayout(maxRate) {
   return parseFloat((maxRate / 100).toFixed(2));
 }
 
+const manager = getManager("wss://socket2v2.nanogames.io/");
 const game = manager.socket("/g/c");
 
 game.on("connect", () => {
@@ -154,16 +160,16 @@ game.on(
 
 // Start the server
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`SSE Server running on port ${PORT}`);
+  console.log(`[nanogames] SSE Server running on port ${PORT}`);
 });
 
-/**
- *
- * here this is the commented version onPrepare.
- * use this to send game_starting message before 5 seconds
- */
+// /**
+//  *
+//  * here this is the commented version onPrepare.
+//  * use this to send game_starting message before 5 seconds
+//  */
 
-//!note i have uncommented this~ but you can comment it or use it as you want :)
+// //!note i have uncommented this~ but you can comment it or use it as you want :)
 game.on(
   "pr",
   decodeBind(({ gameId }) => {

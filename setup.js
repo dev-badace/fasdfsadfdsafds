@@ -1,6 +1,33 @@
 import { Manager } from "socket.io-client";
 import { Emitter } from "@socket.io/component-emitter"; // polyfill of Node.js EventEmitter in the browser
 import { minimal } from "./vendor.js";
+import signData from "./wrt.js";
+
+const userAgent = `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36`;
+
+async function testSocketRoute(N = "") {
+  const M = `https://socket2v2.bcgame.top/test/${N ? "?p=" + N : ""}`;
+  const res = await fetch(M, {
+    credentials: "include",
+    headers: {
+      "User-Agent": userAgent,
+    },
+  });
+
+  return { sign: await res.text() };
+}
+async function getSignData() {
+  const { t1: L, t2: N } = await signData;
+  const I = userAgent;
+  const H = L(I);
+  let { sign: W } = await Promise.race(["", ""].map((z) => testSocketRoute(H)));
+  return { sign: N(W, I), source: W };
+}
+
+async function getQuery() {
+  const { sign } = await getSignData();
+  return { p: sign };
+}
 
 const ss = new TextEncoder("utf-8");
 const rs = new TextDecoder("utf-8");
@@ -659,13 +686,25 @@ function onSettle(...data) {
   console.log(data);
 }
 
-const manager = new Manager("wss://socket2v2.nanogames.io/", {
-  timeout: 2e4,
-  reconnectionDelayMax: 1e4,
-  transports: ["websocket"],
-  reconnectionAttempts: 2,
-  query: { a: 1 },
-  parser: ps,
-});
+const getManager = (url, query = { a: 1 }) => {
+  const manager = new Manager(url, {
+    timeout: 2e4,
+    reconnectionDelayMax: 1e4,
+    reconnectionDelay: 1000,
+    reconnectionAttempts: 2,
+    transports: ["websocket"],
+    query,
+    parser: ps,
+    extraHeaders: {
+      "User-Agent": userAgent,
+      "Accept-Encoding": "gzip, deflate, br, zstd",
+      "Accept-Language": "en-US,en;q=0.9",
+      "Sec-WebSocket-Extensions": "permessage-deflate; client_max_window_bits",
+      Origin: "https://bcgame.top",
+    },
+  });
 
-export { manager, on, decodeBind, onPrepare, onProgress, onEnd, onSettle };
+  return manager;
+};
+
+export { getManager, on, decodeBind, getQuery };

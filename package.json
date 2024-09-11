@@ -4,7 +4,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node socket.js"
+    "start": "node socket.js",
+    "nanogames": "node socket.js",
+    "bcgames": "node bcsocket.js"
   },
   "keywords": [],
   "author": "",
