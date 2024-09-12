@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node socket.js",
     "nanogames": "node socket.js",
-    "bcgames": "node bcsocket.js"
+    "bcgames": "node --no-experimental-websocket bcsocket.js"
   },
   "keywords": [],
   "author": "",
